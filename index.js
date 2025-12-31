@@ -80,22 +80,24 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if(!email || !password){
+      return res.status(400).json({ message: "Email & Password required" });
+    }
+
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "User not found" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid password" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    if (err.response) {
-  alert(err.response.data.message);
-} else {
-  alert("Server not reachable");
-}
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    res.json({ message: "Login successful", user });
 
   } catch (err) {
-    console.log(err);
+    console.log("LOGIN ERROR:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
