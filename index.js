@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('../backend/models/CreateUser');
+const User = require('./models/CreateUser');
 const cors = require('cors');
 const multer = require("multer");
 const path = require("path");
