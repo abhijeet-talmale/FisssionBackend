@@ -69,27 +69,30 @@ app.post("/register", upload.single("pic"), async (req, res) => {
 
 
 
+
+
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-        console.log(req.body);
-    //  Check user exists
+
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    if (!user)
+      return res.status(400).json({ message: "User not found" });
 
-    if (password !== user.password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
       return res.status(400).json({ message: "Invalid password" });
-    }
-    //  Success
-    res.json({ message: "Login successful", user });
 
+    res.json({
+      message: "Login successful",
+      user
+    });
 
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 
 app.get("/users", async (req, res) => {
