@@ -182,6 +182,9 @@ app.put("/users/:id", upload.single("pic"), async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+mongoose.connect(process.env.MONGO_URL)
+.then(()=>console.log("Mongo Connected"))
+.catch(err=>console.log("Mongo Error", err));
 
 
 app.listen(3001, () => console.log("Server running on port 3001"));
