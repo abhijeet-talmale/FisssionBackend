@@ -70,13 +70,16 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Check user exists
     const user = await User.findOne({ email });
-    if (!user)
+    if (!user) {
       return res.status(400).json({ message: "User not found" });
+    }
 
-    const isMatch = (password, user.password);
-    if (!isMatch)
+    // Direct password match (no hashing)
+    if (password !== user.password) {
       return res.status(400).json({ message: "Invalid password" });
+    }
 
     res.json({
       message: "Login successful",
@@ -88,7 +91,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 app.get("/users", async (req, res) => {
   try {
